@@ -1,5 +1,10 @@
+const findOne = "findOne"
+const findList = "findList"
+const insertOne = "insertOne"
+const updateOne = "updateOne"
+
 // 重复代码的封装
-function connectMongo(clt, param, funName, callback) {
+function dealMongo(clt, param, funName, callback) {
 
     // 正式连接数据库
     MongoClient.connect(url, {
@@ -14,7 +19,7 @@ function connectMongo(clt, param, funName, callback) {
 
 
         // 做方法路径判断
-        if (funName == "findList") {
+        if (funName == findList) {
 
             // 客户端 => 操作数据库
             collection.find(param).toArray(function (err, docs) {
@@ -27,11 +32,11 @@ function connectMongo(clt, param, funName, callback) {
             })
 
 
-        } else if (funName == "findOne") {
+        } else if (funName == findOne) {
 
             // 客户端 => 操作数据库
             collection.findOne(param, function (err, doc) {
-               
+
                 // 错误提示        
                 if (err)
                     console.log("findOne:", err);
@@ -40,7 +45,7 @@ function connectMongo(clt, param, funName, callback) {
                     callback(err, doc)
             })
 
-        } else if (funName == "insertOne") {
+        } else if (funName == insertOne) {
             // 客户端 => 操作数据库
             collection.insertOne(param, function (err, result) {
                 // 错误提示
@@ -50,7 +55,7 @@ function connectMongo(clt, param, funName, callback) {
                     // 无误回调传参
                     callback(err, result)
             })
-        }
+        } 
     });
 
 }
@@ -59,6 +64,10 @@ function connectMongo(clt, param, funName, callback) {
 
 // 引入模块
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
+
+exports.ObjectId = ObjectId
+
 
 // 配置数据库端口 URL
 const url = 'mongodb://localhost:27017';
@@ -69,19 +78,19 @@ const dbName = 'szhmqd21';
 // 调用封装后的方法
 exports.findList = (clt, param, callback) => {
 
-    connectMongo(clt, param, "findList", callback)
+    dealMongo(clt, param, findList, callback)
 
 }
 
 exports.findOne = (clt, param, callback) => {
 
-    connectMongo(clt, param, "findOne", callback)
+    dealMongo(clt, param, findOne, callback)
 
 }
 
 exports.insertOne = (clt, param, callback) => {
 
-    connectMongo(clt, param, "insertOne", callback)
+    dealMongo(clt, param, insertOne, callback)
 
 }
 
@@ -90,7 +99,7 @@ exports.insertOne = (clt, param, callback) => {
 // // findList 方法导出 clt:collection,集合名称
 // exports.findList = (clt, param, callback) => {
 
-//     connectMongo(clt, param, findList,callback)
+//     dealMongo(clt, param, findList,callback)
 
 
 //     // 正式连接数据库

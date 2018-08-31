@@ -175,38 +175,20 @@ exports.login = (req, res) => {
             res.json(results)
             return
         }
+
+        req.session.loggedName = req.body.username
+        
         res.json(results)
     })
+}
 
-    // MongoClient.connect(url, {
-    //     useNewUrlParser: true
-    // }, function (err, client) {
 
-    //     const db = client.db(dbName);
+// 完成退出功能
+exports.logout = (req, res) => {
 
-    //     const collection = db.collection('accountInfo');
+    // 清空session代码
+    req.session.loggedName = null
 
-    //     collection.findOne({
-    //         username: req.body.username,
-    //         password: req.body.password
-    //     }, function (err, doc) {
-
-    //         if (doc == null) {
-
-    //             result.status = 2
-    //             result.message = "用户名或密码不正确"
-    //             res.json({
-    //                 result
-    //             })
-
-    //             client.close()
-    //             return
-    //         }
-
-    //         res.json(result)
-
-    //     })
-
-    // });
-
+    // 跳转到登录页面
+    res.send(`<script>location.href="/account/login.html"</script>`)
 }
